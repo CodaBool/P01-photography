@@ -1,9 +1,10 @@
 # DOC https://github.com/serverless/components
-name: testing-website                    # (required) name of your website component instance.
+name: ${env.REPO}
+stage: ${env.STAGE}
 website:
   component: '@serverless/website'
   inputs:
-    bucketName: ${env.REPO}-${env.STAGE}
+    bucketName: ${name}-${stage}
     code:
       src: ./                       # (optional) path to the source folder. default is a hello world html file.
       # hook: npm run build           # (optional) script to run to build the app
