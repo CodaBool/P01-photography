@@ -23,6 +23,10 @@ jobs:
         env:
           SHA: ${{ toJSON(github.sha) }}
           RUN_NUMBER: ${{ toJSON(github.run_number) }}
+
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: '12'
         
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v1
