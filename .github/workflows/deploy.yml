@@ -27,6 +27,13 @@ jobs:
       - uses: actions/setup-node@v2-beta
         with:
           node-version: '12'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
         
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v1
@@ -41,11 +48,15 @@ jobs:
       #   if: ${{ github.ref == 'refs/heads/sample' }}
       #   run: npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      # - name: testing
+      #   run: |
+      #     npm i -g serverless
+
       - name: Deploy to AWS
         # run: npx serverless > output && sed '/› Deploying\|aNA/d' output # sed removes the obnoxious output of sls ("aNA" and "*› Deploying*")
         run: |
-          npx serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          npx serverless
+          npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          npx serverless --debug
         env:
           STAGE: ${{ steps.extract.outputs.stage }}
           REPO: ${{ steps.extract.outputs.repo }}
