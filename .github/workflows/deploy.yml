@@ -41,26 +41,22 @@ jobs:
       - name: Serverless AWS authentication
         run: npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: deploy # sed removes the obnoxious output of sls ("aNA" and "*› Deploying*")
-        run: |
-          npx serverless > output && sed '/› Deploying\|aNA/d' output & rm output 
-          ls
+      - name: deploy 
+        run: npx serverless > output && sed '/› Deploying\|aNA/d' output & rm output # sed removes the obnoxious output of sls ("aNA" and "*› Deploying*")
         env:
           STAGE: ${{ steps.extract.outputs.stage }}
           REPO: ${{ steps.extract.outputs.repo }}
           BUILD_ID: ${{ steps.extract.outputs.build }}
       
-      # Abandon attempt to track .serverless folder
       - name: Commit any tracked files
         run: |
           git config user.name 'CodaBool'
           git config user.email 'codabool@pm.me'
           if git status | grep -q 'untracked files present'; then
+            echo "commiting new serverless state"
             git add .
             git commit -m "github workflow updated files [no ci]"
             git push
-            echo "something to commit"
+          else
+            echo "No deployment changes"
           fi
-
-# git config --global user.name 'CodaBool'
-# git config --global user.email 'codabool@pm.me'
