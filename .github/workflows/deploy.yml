@@ -28,12 +28,12 @@ jobs:
         with:
           node-version: '12'
 
-      # - name: Configure AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: us-east-1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
         
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v1
@@ -42,13 +42,11 @@ jobs:
       #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       #     aws-region: us-east-1
 
-      # - name: Serverless AWS authentication
-      #   run: npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Serverless AWS authentication
+        run: npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: testing
-        run: |
-          npx serverless --component=website config credentials config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }} --debug
-          npx serverless --debug
+      - name: deploy
+        run: npx serverless --debug
         env:
           STAGE: ${{ steps.extract.outputs.stage }}
           REPO: ${{ steps.extract.outputs.repo }}
@@ -59,7 +57,8 @@ jobs:
           echo "hi" > newfile.txt
           git config --global user.name 'CodaBool'
           git config --global user.email 'codabool@pm.me'
-          git commit -am "github action deploy updated serverless [no ci]"
+          git add newfile.txt
+          git commit -m "github action deploy updated serverless [no ci]"
           git push
 
     # WORKED BUT HAS ISSUES IN THE LOGS
