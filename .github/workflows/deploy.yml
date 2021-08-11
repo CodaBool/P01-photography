@@ -36,7 +36,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Serverless AWS authentication
-        run: npx serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: deploy
         run: npx serverless > output && sed '/› Deploying\|aNA/d' output # sed removes the obnoxious output of sls ("aNA" and "*› Deploying*")
@@ -45,10 +45,11 @@ jobs:
           REPO: ${{ steps.extract.outputs.repo }}
           BUILD_ID: ${{ steps.extract.outputs.build }}
       
+      # Abandon attempt to track .serverless folder
       - name: Commit any tracked files
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name 'CodaBool'
+          git config user.email 'codabool@pm.me'
           git status
           git status | grep 'nothing to commit' &> /dev/null
           if [ $? != 0 ]; then
