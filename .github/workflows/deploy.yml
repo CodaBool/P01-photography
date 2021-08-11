@@ -53,12 +53,12 @@ jobs:
           git status
           git status | grep 'nothing to commit' &> /dev/null
           if [ $? != 0 ]; then
-            echo "something to commit"
-            git add .
-            git commit -m "github workflow updated files [no ci]"
-            git push
+          echo "something to commit"
+          git add .
+          git commit -m "github workflow updated files [no ci]"
+          git push
           else
-            echo "nothing to commit"
+          echo "nothing to commit"
           fi
 
 # git config --global user.name 'CodaBool'
