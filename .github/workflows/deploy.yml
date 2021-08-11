@@ -36,7 +36,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Serverless AWS authentication
-        run: npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: npx serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: deploy
         run: npx serverless > output && sed '/› Deploying\|aNA/d' output # sed removes the obnoxious output of sls ("aNA" and "*› Deploying*")
@@ -47,11 +47,18 @@ jobs:
       
       - name: Commit any tracked files
         run: |
-          git config --global user.name 'CodaBool'
-          git config --global user.email 'codabool@pm.me'
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git status
           git status | grep 'nothing to commit' &> /dev/null
           if [ $? != 0 ]; then
             echo "something to commit"
-            git commit -am "github workflow updated files [no ci]"
+            git add .
+            git commit -m "github workflow updated files [no ci]"
             git push
+          else
+            echo "nothing to commit"
           fi
+
+# git config --global user.name 'CodaBool'
+# git config --global user.email 'codabool@pm.me'
