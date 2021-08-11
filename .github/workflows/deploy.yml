@@ -48,16 +48,23 @@ jobs:
       #   if: ${{ github.ref == 'refs/heads/sample' }}
       #   run: npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # - name: testing
-      #   run: |
-      #     npm i -g serverless
-
-      - name: Deploy to AWS
-        # run: npx serverless > output && sed '/› Deploying\|aNA/d' output # sed removes the obnoxious output of sls ("aNA" and "*› Deploying*")
+      - name: testing
         run: |
-          npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          npx serverless --debug
+          npm i -g serverless
+          serverless config credentials config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          severless
         env:
           STAGE: ${{ steps.extract.outputs.stage }}
           REPO: ${{ steps.extract.outputs.repo }}
           BUILD_ID: ${{ steps.extract.outputs.build }}
+
+    # WORKED BUT HAS ISSUES IN THE LOGS
+      # - name: Deploy to AWS
+      #   # run: npx serverless > output && sed '/› Deploying\|aNA/d' output # sed removes the obnoxious output of sls ("aNA" and "*› Deploying*")
+      #   run: |
+      #     npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     npx serverless --debug
+      #   env:
+      #     STAGE: ${{ steps.extract.outputs.stage }}
+      #     REPO: ${{ steps.extract.outputs.repo }}
+      #     BUILD_ID: ${{ steps.extract.outputs.build }}
