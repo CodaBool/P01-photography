@@ -45,10 +45,13 @@ jobs:
           REPO: ${{ steps.extract.outputs.repo }}
           BUILD_ID: ${{ steps.extract.outputs.build }}
       
-      - name: Commit new .serverless Folder
+      - name: Commit any tracked files
         run: |
           git config --global user.name 'CodaBool'
           git config --global user.email 'codabool@pm.me'
-          git status 
-          git commit -am "github workflow updated serverless [no ci]"
-          git push
+          git status | grep 'nothing to commit' &> /dev/null
+          if [ $? != 0 ]; then
+            echo "something to commit"
+            git commit -am "github workflow updated files [no ci]"
+            git push
+          fi
