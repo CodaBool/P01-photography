@@ -50,9 +50,8 @@ jobs:
 
       - name: testing
         run: |
-          npm i -g serverless
-          serverless config credentials config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          severless
+          npx serverless --component=website config credentials config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          npx severless --component=website
         env:
           STAGE: ${{ steps.extract.outputs.stage }}
           REPO: ${{ steps.extract.outputs.repo }}
