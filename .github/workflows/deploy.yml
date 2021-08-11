@@ -42,7 +42,7 @@ jobs:
         run: npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: deploy 
-        run: npx serverless > output && sed '/› Deploying\|aNA/d' output & rm output # sed removes the obnoxious output of sls ("aNA" and "*› Deploying*")
+        run: npx serverless > output && sed '/› Deploying\|aNA/d' output # sed removes the obnoxious output of sls ("aNA" and "*› Deploying*")
         env:
           STAGE: ${{ steps.extract.outputs.stage }}
           REPO: ${{ steps.extract.outputs.repo }}
@@ -54,6 +54,7 @@ jobs:
           git config user.email 'codabool@pm.me'
           if git status | grep -q 'untracked files present'; then
             echo "commiting new serverless state"
+            rm output
             git add .
             git commit -m "github workflow updated files [no ci]"
             git push
