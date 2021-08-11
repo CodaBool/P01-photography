@@ -35,6 +35,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      # TODO: fix component bug
+      # - if the --component flag is included I get an error: Cannot find module '@serverless/website'
+      # - if the --component flag is removed I get an error: "component" input is required to run custom methods
       - name: Serverless AWS authentication
         run: npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
@@ -51,14 +54,13 @@ jobs:
           git config user.name 'CodaBool'
           git config user.email 'codabool@pm.me'
           git status
-          git status | grep 'nothing to commit' &> /dev/null
-          if [ $? != 0 ]; then
-          echo "something to commit"
+          if git status | grep -q 'nothing to commit'; then
+          echo "nothing to commit"
+          else
           git add .
           git commit -m "github workflow updated files [no ci]"
           git push
-          else
-          echo "nothing to commit"
+          echo "something to commit"
           fi
 
 # git config --global user.name 'CodaBool'
