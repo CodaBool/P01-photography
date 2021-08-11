@@ -34,40 +34,20 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-        
-      # - name: Configure AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: us-east-1
 
       - name: Serverless AWS authentication
         run: npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: deploy
-        run: npx serverless --debug
+        run: npx serverless
         env:
           STAGE: ${{ steps.extract.outputs.stage }}
           REPO: ${{ steps.extract.outputs.repo }}
           BUILD_ID: ${{ steps.extract.outputs.build }}
       
-      - name: Commit .Serverless Folder
+      - name: Commit new .serverless Folder
         run: |
-          echo "hi" > newfile.txt
           git config --global user.name 'CodaBool'
           git config --global user.email 'codabool@pm.me'
-          git add newfile.txt
-          git commit -m "github action deploy updated serverless [no ci]"
+          git commit -am "github action deploy updated serverless [no ci]"
           git push
-
-    # WORKED BUT HAS ISSUES IN THE LOGS
-      # - name: Deploy to AWS
-      #   # run: npx serverless > output && sed '/› Deploying\|aNA/d' output # sed removes the obnoxious output of sls ("aNA" and "*› Deploying*")
-      #   run: |
-      #     npx serverless --component=website config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     npx serverless --debug
-      #   env:
-      #     STAGE: ${{ steps.extract.outputs.stage }}
-      #     REPO: ${{ steps.extract.outputs.repo }}
-      #     BUILD_ID: ${{ steps.extract.outputs.build }}
